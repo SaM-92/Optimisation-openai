@@ -11,7 +11,9 @@ import numpy as np
 import math
 import pandas   as pd
 from pandas import Series, DataFrame
-from subs.data_processing import time_series_plot
+from subs.data_processing import time_series_plot, plot_cumulative_distribution
+from subs.optimisation_engine import opt_engine , solver_opt
+
 st.set_page_config(
     page_title="Capacity Expansion Model",
     page_icon="🏭",
@@ -26,10 +28,18 @@ st.markdown("🔗 [LinkedIn](https://www.linkedin.com/in/saeed-misaghian/)")
 
 st.markdown("📕 This model and associated data are taken from [this repos](https://github.com/Power-Systems-Optimization-Course/power-systems-optimization/blob/master/Notebooks/03-Basic-Capacity-Expansion.ipynb)")
 
+st.markdown("### 🏭 Generators Data")
 generators = pd.read_csv("expansion_data/generators_for_expansion.csv")
-demand = pd.read_csv("expansion_data/demand_for_expansion.csv")
-
 st.dataframe(generators)
-st.dataframe(demand)
 
-time_series_plot(demand,Demand)
+st.markdown("### 💡 Demand Data")
+demand = pd.read_csv("expansion_data/demand_for_expansion.csv")
+st.dataframe(demand)
+time_series_plot(demand,'Demand')
+plot_cumulative_distribution(demand)
+
+st.markdown("### 💡 Optimisation")
+
+
+opt_model = opt_engine(generators,demand) 
+solver_opt(opt_model)
