@@ -87,4 +87,11 @@ def RES_reading(input_method):
         RES_wind = RES.Wind
         RES_solar = RES.Solar
     st.dataframe(RES)    
+
     return (RES,RES_wind,RES_solar)
+
+def not_supplied_energy():
+    NSECost = st.slider(' Penalty for non-served energy ($/MWh)', 5000, 20000, 9000, key = 'NSECost')
+    st.markdown("We recommend at least $9000/MWh")
+    st.write("Penalty for non-served energy ", NSECost, '$/MWh')
+    return NSECost

@@ -13,7 +13,7 @@ import pandas   as pd
 from pandas import Series, DataFrame
 from subs.data_processing import time_series_plot, plot_cumulative_distribution
 from subs.optimisation_engine import opt_engine , solver_opt
-from subs.initialisation import GenCo_reading , demand_reading , RES_reading
+from subs.initialisation import GenCo_reading , demand_reading , RES_reading , not_supplied_energy
 st.set_page_config(
     page_title="Capacity Expansion Model",
     page_icon="🏭",
@@ -53,10 +53,8 @@ input_RES = st.radio('Do you want to use the default values for year long renewa
 RES, RES_wind, RES_solar = RES_reading(input_RES)
 
 st.markdown("### 💡 Penalty for non-served energy ($/MWh)")
-NSECost = st.slider(' Penalty for non-served energy ($/MWh)', 500, 20000, 5000)
-st.markdown("We recommend at least $9000/MWh")
-st.write("Penalty for non-served energy ", NSECost, '$/MWh')
 
+NSECost = not_supplied_energy()
 
 # generators["FixedCost"]
 # generators["VarCost"]
