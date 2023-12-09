@@ -36,9 +36,9 @@ def GenCo_reading(input_method):
     else:
         # If the user chose to use the editable table, display the data editor
         generators = st.data_editor(df, num_rows="dynamic")
-        FixedCost = generators.FixedCost
-        VarCost = generators.VarCost    
-        generators_names = generators.Generators
+        FixedCost = "FixedCost"
+        VarCost = "VarCost" 
+        generators_names = "G"
 
     return(generators,FixedCost,VarCost,generators_names)    
 
@@ -89,8 +89,8 @@ def RES_reading(input_method):
     else:
         # If the user chose to use the default values, load the default data
         RES = pd.read_csv("expansion_data/wind_solar_for_expansion.csv")
-        RES_wind = RES.Wind
-        RES_solar = RES.Solar
+        RES_wind = "Wind"
+        RES_solar = "Solar"
     st.dataframe(RES)    
 
     return (RES,RES_wind,RES_solar)
