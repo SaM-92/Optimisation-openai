@@ -65,7 +65,8 @@ st.markdown("### ⚙️ Optimisation Engine")
 if st.button('Run the Model'):
     time_series_plot(demand,'Demand')
     plot_cumulative_distribution(demand)
-    opt_model = opt_engine(generators,demand,NSECost) 
+    
+    opt_model = opt_engine(generators,FixedCost,VarCost,generators_names,demand,demand_column,RES, RES_wind, RES_solar,NSECost) 
     solver_opt(opt_model)
 
 st.markdown("### 🤖 OpenAI ")

@@ -1,7 +1,7 @@
 from pyomo.environ import *
 import streamlit as st  # web development
 
-def opt_engine(generators,demand,NSECost):
+def opt_engine(generators,FixedCost,VarCost,generators_names,demand,demand_column,RES, RES_wind, RES_solar,NSECost):
 
     # Create a concrete model in Pyomo 
     model = ConcreteModel()
@@ -11,7 +11,7 @@ def opt_engine(generators,demand,NSECost):
 
     # The set of generators from the generators DataFrame
 
-    model.G  = Set(initialize=RangeSet(0,generators.shape[0] -3), doc='set of generators') 
+    model.G  = Set(initialize=[i for i in generators.G[:-2]], doc='set of generators') 
 
     # The set of hours in the demand DataFrame
     model.H = Set(initialize=RangeSet(0,len(demand.Hour)-1), doc='set of time')  
@@ -27,7 +27,7 @@ def opt_engine(generators,demand,NSECost):
 
     #cDemandBalance (eq. 11)
     def cDemandBalance_(model,h):
-        return(sum(model.GEN[i,h] for i in model.G) + model.NSE[h] == demand.Demand[h])
+        return(sum(model.GEN[i,h] for i in model.G) + model.NSE[h] == demand.demand_column[h])
     model.cDemandBalance=Constraint(model.H,rule=cDemandBalance_)
 
 
@@ -37,11 +37,16 @@ def opt_engine(generators,demand,NSECost):
     model.cCapacity=Constraint(model.G,model.H,rule=cCapacity_)
 
     # ---------------Objective Function-------------------
+    # Create dictionaries for fixed and variable costs
+    fixed_costs = generators.set_index(generators_names)[FixedCost].to_dict()
+    var_costs = generators.set_index(generators_names)[VarCost].to_dict()
+
     def obj_rule(model):
-        fixed_cost_=sum(generators["FixedCost"][i] * model.CAP[i] for i in model.G)
-        variable_cost_=sum(generators["VarCost"][i] * model.GEN[i,h] for i in model.G for h in model.H)
-        not_supplied_cost=sum(NSECost * model.NSE[h] for h in model.H)
-        return (fixed_cost_+variable_cost_+not_supplied_cost)
+        fixed_cost_ = sum(fixed_costs[i] * model.CAP[i] for i in model.G)
+        variable_cost_ = sum(var_costs[i] * model.GEN[i,h] for i in model.G for h in model.H)
+        not_supplied_cost = sum(NSECost * model.NSE[h] for h in model.H)
+        return (fixed_cost_ + variable_cost_ + not_supplied_cost)
+    
     model.of=Objective(rule=obj_rule,sense=minimize)
 
     return model 
