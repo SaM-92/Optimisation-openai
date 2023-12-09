@@ -107,6 +107,33 @@ st.dataframe(demand)
 time_series_plot(demand,'Demand')
 plot_cumulative_distribution(demand)
 
+st.markdown("### 💡Renewables Input Data")
+
+input_method = st.radio('Do you want to use the default values for year long renewables data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
+
+if input_method == 'Upload My Own Data':
+    # File uploader
+    uploaded_file = st.file_uploader("Upload your CSV file")
+    
+    # Check if a file was uploaded
+    if uploaded_file is not None:
+        # Load the uploaded file into a DataFrame
+        RES = pd.read_csv(uploaded_file)
+        RES_wind = st.selectbox(
+            "Please select the column with wind observations:", RES.columns
+        )
+        RES_solar = st.selectbox(
+            "Please select the column with solar observations:", RES.columns
+        )
+    else:
+        st.warning('Please upload a CSV file.')
+        st.stop()
+else:
+    # If the user chose to use the default values, load the default data
+    RES = pd.read_csv("expansion_data/wind_solar_for_expansion.csv")
+
+st.dataframe(RES)
+
 st.markdown("### ⚙️ Optimisation Engine")
 
 st.markdown("#### 📑 Inputs ")
