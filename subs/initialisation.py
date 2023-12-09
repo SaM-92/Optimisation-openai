@@ -38,7 +38,7 @@ def GenCo_reading(input_method):
         generators = st.data_editor(df, num_rows="dynamic")
         FixedCost = generators.FixedCost
         VarCost = generators.VarCost    
-        generators_names = generators.generators_names
+        generators_names = generators.Generators
 
     return(generators,FixedCost,VarCost,generators_names)    
 

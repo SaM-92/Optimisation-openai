@@ -34,7 +34,9 @@ st.markdown("### 🏭 Generators Input Data")
 # Ask the user whether they want to upload a CSV file or use the editable table
 input_genco = st.radio('How do you want to input the data?', ('Use Editable Table','Upload CSV File' ))
 
-generators,FixedCost,VarCost = GenCo_reading(input_genco)
+generators,FixedCost,VarCost,generators_names = GenCo_reading(input_genco)
+
+number_of_generators = generators.shape[0]
 
 
 
@@ -56,10 +58,6 @@ st.markdown("### 💡 Penalty for non-served energy ($/MWh)")
 
 NSECost = not_supplied_energy()
 
-# generators["FixedCost"]
-# generators["VarCost"]
-# number_of_generators
-# name_of_generators
 
 
 
@@ -67,5 +65,8 @@ st.markdown("### ⚙️ Optimisation Engine")
 if st.button('Run the Model'):
     time_series_plot(demand,'Demand')
     plot_cumulative_distribution(demand)
-    # opt_model = opt_engine(generators,demand,NSECost) 
-    # solver_opt(opt_model)
+    opt_model = opt_engine(generators,demand,NSECost) 
+    solver_opt(opt_model)
+
+st.markdown("### 🤖 OpenAI ")
+
