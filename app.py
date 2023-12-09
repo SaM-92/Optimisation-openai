@@ -43,7 +43,7 @@ input_method = st.radio('How do you want to input the data?', ('Use Editable Tab
 
 if input_method == 'Upload CSV File':
     # File uploader
-    uploaded_file = st.file_uploader("Upload your CSV file")
+    uploaded_file = st.file_uploader("Upload your CSV file",key='Genco')
 
     # Check if a file was uploaded
     if uploaded_file is not None:
@@ -58,13 +58,13 @@ else:
     generators = st.data_editor(df, num_rows="dynamic")
 
 
-st.markdown("### 💡 Demand Input Data")
+st.markdown("### 📊 Demand Input Data")
 # Ask the user whether they want to use the default values or upload their own data
 input_method = st.radio('Do you want to use the default values for year long load data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
 
 if input_method == 'Upload My Own Data':
     # File uploader
-    uploaded_file = st.file_uploader("Upload your CSV file")
+    uploaded_file = st.file_uploader("Upload your CSV file",key='demand')
     
     # Check if a file was uploaded
     if uploaded_file is not None:
@@ -82,26 +82,25 @@ else:
 
 
 st.dataframe(demand)
-time_series_plot(demand,'Demand')
-plot_cumulative_distribution(demand)
 
-st.markdown("### 💡Renewables Capacity Factors")
+
+st.markdown("### 🍃🌍☀️ Renewables Capacity Factors")
 
 input_method = st.radio('Do you want to use the default values for year long renewables data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
 
 if input_method == 'Upload My Own Data':
     # File uploader
-    uploaded_file = st.file_uploader("Upload your CSV file")
+    uploaded_file = st.file_uploader("Upload your CSV file",key='RES')
     
     # Check if a file was uploaded
     if uploaded_file is not None:
         # Load the uploaded file into a DataFrame
         RES = pd.read_csv(uploaded_file)
         RES_wind = st.selectbox(
-            "Please select the column with wind observations:", RES.columns
+            "Please select the column with wind observations 🍃:", RES.columns
         )
         RES_solar = st.selectbox(
-            "Please select the column with solar observations:", RES.columns
+            "Please select the column with solar observations ☀️:", RES.columns
         )
     else:
         st.warning('Please upload a CSV file.')
@@ -112,12 +111,12 @@ else:
 
 st.dataframe(RES)
 
-st.markdown("### ⚙️ Optimisation Engine")
+st.markdown("### 💡 Penalty for non-served energy ($/MWh)")
+NSECost = st.slider(' Penalty for non-served energy ($/MWh)', 500, 20000, 5000)
+st.markdown("We recommend at least $9000/MWh")
+st.write("Penalty for non-served energy ", NSECost, '$/MWh')
 
-st.markdown("#### 📑 Inputs ")
-# NSECost = st.slider(' Penalty for non-served energy ($/MWh)', 500, 20000, 5000)
-# st.markdown("We recommend at least $9000/MWh")
-# st.write("Penalty for non-served energy ", NSECost, '$/MWh')
+
 # generators["FixedCost"]
 # generators["VarCost"]
 # number_of_generators
@@ -125,7 +124,9 @@ st.markdown("#### 📑 Inputs ")
 
 
 
-
-
-# opt_model = opt_engine(generators,demand,NSECost) 
-# solver_opt(opt_model)
+st.markdown("### ⚙️ Optimisation Engine")
+if st.button('Run the Model'):
+    time_series_plot(demand,'Demand')
+    plot_cumulative_distribution(demand)
+    # opt_model = opt_engine(generators,demand,NSECost) 
+    # solver_opt(opt_model)
