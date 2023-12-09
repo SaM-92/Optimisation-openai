@@ -1,14 +1,13 @@
 from pyomo.environ import *
 import streamlit as st  # web development
 
-def opt_engine(generators,demand):
+def opt_engine(generators,demand,NSECost):
 
     # Create a concrete model in Pyomo 
     model = ConcreteModel()
 
     # penalty for non-served energy 
-    NSECost = 9000
-
+    NSECost = NSECost
 
     # The set of generators from the generators DataFrame
 
@@ -19,9 +18,10 @@ def opt_engine(generators,demand):
 
     # Generating capacity built (MW)
     model.CAP=Var(model.G,domain=NonNegativeReals)
-    # Generation in each hour (MWh)
 
+    # Generation in each hour (MWh)
     model.GEN=Var(model.G,model.H,domain=NonNegativeReals)
+
     # Non-served energy in each hour (MWh)
     model.NSE=Var(model.H,domain=NonNegativeReals)
 

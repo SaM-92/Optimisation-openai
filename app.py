@@ -28,18 +28,99 @@ st.markdown("🔗 [LinkedIn](https://www.linkedin.com/in/saeed-misaghian/)")
 
 st.markdown("📕 This model and associated data are taken from [this repos](https://github.com/Power-Systems-Optimization-Course/power-systems-optimization/blob/master/Notebooks/03-Basic-Capacity-Expansion.ipynb)")
 
-st.markdown("### 🏭 Generators Data")
-generators = pd.read_csv("expansion_data/generators_for_expansion.csv")
-st.dataframe(generators)
+st.markdown("### 🏭 Generators Input Data")
 
-st.markdown("### 💡 Demand Data")
-demand = pd.read_csv("expansion_data/demand_for_expansion.csv")
+# uploaded_file = st.file_uploader("Upload your CSV file")
+# generators = pd.read_csv("expansion_data/generators_for_expansion.csv")
+# st.dataframe(generators)
+
+# # Create a DataFrame with your default data
+# data = {
+#     'Generators': ['Geo', 'Coal', 'CCGT', 'CT', 'Wind', 'Solar'],
+#     'Description': ['Geothermal', 'Supercritical Coal', 'Natural gas CCGT', 'Natural gas CT', 'Onshore wind', 'Tracking solar PV'],
+#     'FixedCost': [563500, 270280, 82400, 62888, 91000, 50850],
+#     'VarCost': [0, 24.2, 27.6, 43.8, 0, 0]
+# }
+# df = pd.DataFrame(data)
+
+
+# Use st.data_editor to create an editable table with the default data
+# edited_df = st.data_editor(df, num_rows="dynamic")
+
+
+import streamlit as st
+import pandas as pd
+
+# Create a DataFrame with your default data
+data = {
+    'Generators': ['Geo', 'Coal', 'CCGT', 'CT', 'Wind', 'Solar'],
+    'Description': ['Geothermal', 'Supercritical Coal', 'Natural gas CCGT', 'Natural gas CT', 'Onshore wind', 'Tracking solar PV'],
+    'FixedCost': [563500, 270280, 82400, 62888, 91000, 50850],
+    'VarCost': [0, 24.2, 27.6, 43.8, 0, 0]
+}
+df = pd.DataFrame(data)
+
+# Ask the user whether they want to upload a CSV file or use the editable table
+input_method = st.radio('How do you want to input the data?', ('Use Editable Table','Upload CSV File' ))
+
+if input_method == 'Upload CSV File':
+    # File uploader
+    uploaded_file = st.file_uploader("Upload your CSV file")
+
+    # Check if a file was uploaded
+    if uploaded_file is not None:
+        # Load the uploaded file into a DataFrame
+        generators = pd.read_csv(uploaded_file)
+        st.dataframe(generators)
+    else:
+        st.warning('Please upload a CSV file.')
+        st.stop()
+else:
+    # If the user chose to use the editable table, display the data editor
+    generators = st.data_editor(df, num_rows="dynamic")
+
+
+st.markdown("### 💡 Demand Input Data")
+# Ask the user whether they want to use the default values or upload their own data
+input_method = st.radio('Do you want to use the default values for year long load data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
+
+if input_method == 'Upload My Own Data':
+    # File uploader
+    uploaded_file = st.file_uploader("Upload your CSV file")
+    
+    # Check if a file was uploaded
+    if uploaded_file is not None:
+        # Load the uploaded file into a DataFrame
+        demand = pd.read_csv(uploaded_file)
+        demand_column = st.selectbox(
+            "Please select the column with demand observations:", demand.columns
+        )
+    else:
+        st.warning('Please upload a CSV file.')
+        st.stop()
+else:
+    # If the user chose to use the default values, load the default data
+    demand = pd.read_csv("expansion_data/demand_for_expansion.csv")
+
+
 st.dataframe(demand)
 time_series_plot(demand,'Demand')
 plot_cumulative_distribution(demand)
 
-st.markdown("### 💡 Optimisation")
+st.markdown("### ⚙️ Optimisation Engine")
+
+st.markdown("#### 📑 Inputs ")
+# NSECost = st.slider(' Penalty for non-served energy ($/MWh)', 500, 20000, 5000)
+# st.markdown("We recommend at least $9000/MWh")
+# st.write("Penalty for non-served energy ", NSECost, '$/MWh')
+# generators["FixedCost"]
+# generators["VarCost"]
+# number_of_generators
+# name_of_generators
 
 
-opt_model = opt_engine(generators,demand) 
-solver_opt(opt_model)
+
+
+
+# opt_model = opt_engine(generators,demand,NSECost) 
+# solver_opt(opt_model)
