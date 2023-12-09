@@ -47,18 +47,19 @@ def opt_engine(generators,demand):
     return model 
 
 def solver_opt(model_):
-    solver = SolverFactory('glpk')     
-    #solver.options['thread']=4
+    with st.spinner('Solving the model...'):
+        solver = SolverFactory('glpk')     
+        #solver.options['thread']=4
 
-    # solver.options['mipgap']=1e-1
-    results = solver.solve(model_, tee=True)   
-    model_.solutions.load_from(results)  
-    if (results.solver.status == SolverStatus.ok) and (results.solver.termination_condition == TerminationCondition.optimal):
-        # print('feasible')
-        st.text('feasible')
-    elif (results.solver.termination_condition == TerminationCondition.infeasible):
-        # print('infeasible')
-        st.text('infeasible')
-    else:
-        # print ('Solver Status:',  results.solver.status)
-        st.text(f'Solver Status: {results.solver.status}')
+        # solver.options['mipgap']=1e-1
+        results = solver.solve(model_, tee=True)   
+        model_.solutions.load_from(results)  
+        if (results.solver.status == SolverStatus.ok) and (results.solver.termination_condition == TerminationCondition.optimal):
+            # print('feasible')
+            st.text('✔️ Feasible')
+        elif (results.solver.termination_condition == TerminationCondition.infeasible):
+            # print('infeasible')
+            st.text('❌ infeasible')
+        else:
+            # print ('Solver Status:',  results.solver.status)
+            st.text(f'Solver Status: {results.solver.status}')
