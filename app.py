@@ -29,28 +29,6 @@ st.markdown("🔗 [LinkedIn](https://www.linkedin.com/in/saeed-misaghian/)")
 st.markdown("📕 This model and associated data are taken from [this repos](https://github.com/Power-Systems-Optimization-Course/power-systems-optimization/blob/master/Notebooks/03-Basic-Capacity-Expansion.ipynb)")
 
 st.markdown("### 🏭 Generators Input Data")
-
-# uploaded_file = st.file_uploader("Upload your CSV file")
-# generators = pd.read_csv("expansion_data/generators_for_expansion.csv")
-# st.dataframe(generators)
-
-# # Create a DataFrame with your default data
-# data = {
-#     'Generators': ['Geo', 'Coal', 'CCGT', 'CT', 'Wind', 'Solar'],
-#     'Description': ['Geothermal', 'Supercritical Coal', 'Natural gas CCGT', 'Natural gas CT', 'Onshore wind', 'Tracking solar PV'],
-#     'FixedCost': [563500, 270280, 82400, 62888, 91000, 50850],
-#     'VarCost': [0, 24.2, 27.6, 43.8, 0, 0]
-# }
-# df = pd.DataFrame(data)
-
-
-# Use st.data_editor to create an editable table with the default data
-# edited_df = st.data_editor(df, num_rows="dynamic")
-
-
-import streamlit as st
-import pandas as pd
-
 # Create a DataFrame with your default data
 data = {
     'Generators': ['Geo', 'Coal', 'CCGT', 'CT', 'Wind', 'Solar'],
@@ -107,7 +85,7 @@ st.dataframe(demand)
 time_series_plot(demand,'Demand')
 plot_cumulative_distribution(demand)
 
-st.markdown("### 💡Renewables Input Data")
+st.markdown("### 💡Renewables Capacity Factors")
 
 input_method = st.radio('Do you want to use the default values for year long renewables data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
 
