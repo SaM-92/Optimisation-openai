@@ -36,3 +36,27 @@ def GenCo_reading(input_method):
         VarCost = generators.VarCost    
 
     return(generators,FixedCost,VarCost)    
+
+def demand_reading(input_method):
+
+    if input_method == 'Upload My Own Data':
+        # File uploader
+        uploaded_file = st.file_uploader("Upload your CSV file",key='demand')
+        
+        # Check if a file was uploaded
+        if uploaded_file is not None:
+            # Load the uploaded file into a DataFrame
+            demand = pd.read_csv(uploaded_file)
+            demand_column = st.selectbox(
+                "Please select the column with demand observations:", demand.columns
+            )
+        else:
+            st.warning('Please upload a CSV file.')
+            st.stop()
+    else:
+        # If the user chose to use the default values, load the default data
+        demand = pd.read_csv("expansion_data/demand_for_expansion.csv")
+        demand_column=demand.Demand
+
+    st.dataframe(demand)
+    return(demand,demand_column)

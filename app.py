@@ -13,7 +13,7 @@ import pandas   as pd
 from pandas import Series, DataFrame
 from subs.data_processing import time_series_plot, plot_cumulative_distribution
 from subs.optimisation_engine import opt_engine , solver_opt
-from subs.initialisation import GenCo_reading
+from subs.initialisation import GenCo_reading , demand_reading
 st.set_page_config(
     page_title="Capacity Expansion Model",
     page_icon="🏭",
@@ -32,36 +32,18 @@ st.markdown("### 🏭 Generators Input Data")
 
 
 # Ask the user whether they want to upload a CSV file or use the editable table
-input_method = st.radio('How do you want to input the data?', ('Use Editable Table','Upload CSV File' ))
+input_genco = st.radio('How do you want to input the data?', ('Use Editable Table','Upload CSV File' ))
 
-generators,FixedCost,VarCost = GenCo_reading(input_method)
+generators,FixedCost,VarCost = GenCo_reading(input_genco)
 
 
 
 st.markdown("### 📊 Demand Input Data")
 # Ask the user whether they want to use the default values or upload their own data
-input_method = st.radio('Do you want to use the default values for year long load data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
+input_demand = st.radio('Do you want to use the default values for year long load data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
 
-if input_method == 'Upload My Own Data':
-    # File uploader
-    uploaded_file = st.file_uploader("Upload your CSV file",key='demand')
-    
-    # Check if a file was uploaded
-    if uploaded_file is not None:
-        # Load the uploaded file into a DataFrame
-        demand = pd.read_csv(uploaded_file)
-        demand_column = st.selectbox(
-            "Please select the column with demand observations:", demand.columns
-        )
-    else:
-        st.warning('Please upload a CSV file.')
-        st.stop()
-else:
-    # If the user chose to use the default values, load the default data
-    demand = pd.read_csv("expansion_data/demand_for_expansion.csv")
+demand , demand_column = demand_reading(input_demand)
 
-
-st.dataframe(demand)
 
 
 st.markdown("### 🍃🌍☀️ Renewables Capacity Factors")
