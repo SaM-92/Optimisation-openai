@@ -60,3 +60,31 @@ def demand_reading(input_method):
 
     st.dataframe(demand)
     return(demand,demand_column)
+
+
+def RES_reading(input_method):
+
+    if input_method == 'Upload My Own Data':
+        # File uploader
+        uploaded_file = st.file_uploader("Upload your CSV file",key='RES')
+        
+        # Check if a file was uploaded
+        if uploaded_file is not None:
+            # Load the uploaded file into a DataFrame
+            RES = pd.read_csv(uploaded_file)
+            RES_wind = st.selectbox(
+                "Please select the column with wind observations 🍃:", RES.columns
+            )
+            RES_solar = st.selectbox(
+                "Please select the column with solar observations ☀️:", RES.columns
+            )
+        else:
+            st.warning('Please upload a CSV file.')
+            st.stop()
+    else:
+        # If the user chose to use the default values, load the default data
+        RES = pd.read_csv("expansion_data/wind_solar_for_expansion.csv")
+        RES_wind = RES.Wind
+        RES_solar = RES.Solar
+    st.dataframe(RES)    
+    return (RES,RES_wind,RES_solar)

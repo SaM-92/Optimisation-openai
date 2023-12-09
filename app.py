@@ -13,7 +13,7 @@ import pandas   as pd
 from pandas import Series, DataFrame
 from subs.data_processing import time_series_plot, plot_cumulative_distribution
 from subs.optimisation_engine import opt_engine , solver_opt
-from subs.initialisation import GenCo_reading , demand_reading
+from subs.initialisation import GenCo_reading , demand_reading , RES_reading
 st.set_page_config(
     page_title="Capacity Expansion Model",
     page_icon="🏭",
@@ -48,30 +48,9 @@ demand , demand_column = demand_reading(input_demand)
 
 st.markdown("### 🍃🌍☀️ Renewables Capacity Factors")
 
-input_method = st.radio('Do you want to use the default values for year long renewables data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
+input_RES = st.radio('Do you want to use the default values for year long renewables data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
 
-if input_method == 'Upload My Own Data':
-    # File uploader
-    uploaded_file = st.file_uploader("Upload your CSV file",key='RES')
-    
-    # Check if a file was uploaded
-    if uploaded_file is not None:
-        # Load the uploaded file into a DataFrame
-        RES = pd.read_csv(uploaded_file)
-        RES_wind = st.selectbox(
-            "Please select the column with wind observations 🍃:", RES.columns
-        )
-        RES_solar = st.selectbox(
-            "Please select the column with solar observations ☀️:", RES.columns
-        )
-    else:
-        st.warning('Please upload a CSV file.')
-        st.stop()
-else:
-    # If the user chose to use the default values, load the default data
-    RES = pd.read_csv("expansion_data/wind_solar_for_expansion.csv")
-
-st.dataframe(RES)
+RES, RES_wind, RES_solar = RES_reading(input_RES)
 
 st.markdown("### 💡 Penalty for non-served energy ($/MWh)")
 NSECost = st.slider(' Penalty for non-served energy ($/MWh)', 500, 20000, 5000)
