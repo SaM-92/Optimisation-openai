@@ -26,6 +26,10 @@ def GenCo_reading(input_method):
             VarCost = st.selectbox(
                 "Please select the column showing Variable Costs:", generators.columns
             )
+
+            generators_names = st.selectbox(
+                "Please select the column showing name of generators:", generators.columns
+            )
         else:
             st.warning('Please upload a CSV file.')
             st.stop()
@@ -34,8 +38,9 @@ def GenCo_reading(input_method):
         generators = st.data_editor(df, num_rows="dynamic")
         FixedCost = generators.FixedCost
         VarCost = generators.VarCost    
+        generators_names = generators.generators_names
 
-    return(generators,FixedCost,VarCost)    
+    return(generators,FixedCost,VarCost,generators_names)    
 
 def demand_reading(input_method):
 
