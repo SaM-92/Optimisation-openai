@@ -50,6 +50,12 @@ if input_method == 'Upload CSV File':
         # Load the uploaded file into a DataFrame
         generators = pd.read_csv(uploaded_file)
         st.dataframe(generators)
+        FixedCost = st.selectbox(
+            "Please select the column showing Fixed Costs:", generators.columns
+        )
+        VarCost = st.selectbox(
+            "Please select the column showing Variable Costs:", generators.columns
+        )
     else:
         st.warning('Please upload a CSV file.')
         st.stop()
