@@ -63,6 +63,17 @@ def opt_engine(
             return(model.GEN[g,h] <= model.CAP[g] *RES[RES_solar])
     model.cCapacity=Constraint(model.G,model.H,rule=cCapacity_)
 
+    def RES_max_cap_(model,g):
+        if g == RES_wind:
+            return(model.CAP[g] <= np.max(demand[demand_column])*max_capacity_wind)
+        elif g == RES_solar:
+            # return(model.GEN[g,h] <= model.CAP[g]*max_capacity_solar)
+            return(model.CAP[g] <= np.max(demand[demand_column])**max_capacity_solar)
+        else:
+            return Constraint.Skip
+    model.RES_max_cap=Constraint(model.G,rule=RES_max_cap_)
+
+
     # ---------------Objective Function-------------------
     # Create dictionaries for fixed and variable costs
     fixed_costs = generators.set_index(generators_names)[FixedCost].to_dict()
@@ -106,46 +117,87 @@ def solver_opt(model_):
     return state_solution 
 
 def interpret_outputs(model_,generators,generators_names,demand,demand_column,state_solution):
-    if state_solution == True:
-                # Create a dictionary for generator indices
-                generator_indices = {name: i for i, name in enumerate(generators[generators_names])}
+    # if state_solution == True:
+    #             # Create a dictionary for generator indices
+    #             generator_indices = {name: i for i, name in enumerate(generators[generators_names])}
 
-                # Initialize an empty DataFrame
-                results_df  = pd.DataFrame(columns=['Resource', 'MW', 'Percent_MW', 'GWh', 'Percent_GWh'])
+    #             # Initialize an empty DataFrame
+    #             results_df  = pd.DataFrame(columns=['Resource', 'MW', 'Percent_MW', 'GWh', 'Percent_GWh'])
 
-                # Record generation capacity and energy results
-                for i in model_.G:
-                    generation = value(sum(model_.GEN[i,h] for h in model_.H))
-                    MWh_share = generation/sum(demand[demand_column])*100
-                    cap_share = value(model_.CAP[i])/np.max(demand[demand_column])*100
-                    new_row  = pd.DataFrame({
-                        'Resource': generators[generators_names][generator_indices[i]], 
-                        'MW': value(model_.CAP[i]),
-                        'Percent_MW': cap_share,
-                        'GWh': generation/1000,
-                        'Percent_GWh': MWh_share
-                    },index=[0])
+    #             # Record generation capacity and energy results
+    #             for i in model_.G:
+    #                 generation = value(sum(model_.GEN[i,h] for h in model_.H))
+    #                 MWh_share = generation/sum(demand[demand_column])*100
+    #                 cap_share = value(model_.CAP[i])/np.max(demand[demand_column])*100
+    #                 new_row  = pd.DataFrame({
+    #                     'Resource': generators[generators_names][generator_indices[i]], 
+    #                     'MW': value(model_.CAP[i]),
+    #                     'Percent_MW': cap_share,
+    #                     'GWh': generation/1000,
+    #                     'Percent_GWh': MWh_share
+    #                 },index=[0])
 
-                results_df = pd.concat([results_df, new_row], ignore_index=True)
+    #                 results_df = pd.concat([results_df, new_row], ignore_index=True)
 
                     
-                # Calculate how much non-served energy there was and add to results
-                NSE_MW = 0 
-                for h in model_.H:
-                    initial= value(model_.NSE[h]) 
-                    if initial > NSE_MW:
-                        NSE_MW=initial   
-                NSE_MWh = value(sum(model_.NSE[h] for h in model_.H))
+    #             # Calculate how much non-served energy there was and add to results
+    #             NSE_MW = 0 
+    #             for h in model_.H:
+    #                 initial= value(model_.NSE[h]) 
+    #                 if initial > NSE_MW:
+    #                     NSE_MW=initial   
+    #             NSE_MWh = value(sum(model_.NSE[h] for h in model_.H))
 
-                new_row  = pd.DataFrame({
-                        'Resource': "NSE", 
-                        'MW': NSE_MW,
-                        'Percent_MW': NSE_MW/(np.max(demand[demand_column]))*100,
-                        'GWh': NSE_MWh/1000,
-                        'Percent_GWh':100* NSE_MWh/sum(demand[demand_column])
-                    },index=[0]) 
+    #             new_row  = pd.DataFrame({
+    #                     'Resource': "NSE", 
+    #                     'MW': NSE_MW,
+    #                     'Percent_MW': NSE_MW/(np.max(demand[demand_column]))*100,
+    #                     'GWh': NSE_MWh/1000,
+    #                     'Percent_GWh':100* NSE_MWh/sum(demand[demand_column])
+    #                 },index=[0]) 
                 
-                results_df = pd.concat([results_df, new_row], ignore_index=True) 
+    #             results_df = pd.concat([results_df, new_row], ignore_index=True) 
 
-                st.write(results_df)
+    #             st.write(results_df)
 
+    if state_solution == True:
+        generator_indices = {name: i for i, name in enumerate(generators[generators_names])}
+        results = []  # Create an empty list to hold DataFrames
+
+        for i in model_.G:
+            generation = value(sum(model_.GEN[i, h] for h in model_.H))
+            MWh_share = generation / sum(demand[demand_column]) * 100
+            cap_share = value(model_.CAP[i]) / np.max(demand[demand_column]) * 100
+            new_row = pd.DataFrame({
+                'Resource': generators[generators_names][generator_indices[i]],
+                'MW': value(model_.CAP[i]),
+                'Percent_MW': cap_share,
+                'GWh': generation / 1000,
+                'Percent_GWh': MWh_share
+            }, index=[0])
+            
+            results.append(new_row)  # Append each DataFrame to the list
+
+        # Calculate how much non-served energy there was and add to results
+        NSE_MW = 0 
+        for h in model_.H:
+            initial= value(model_.NSE[h]) 
+            if initial > NSE_MW:
+                NSE_MW=initial   
+        NSE_MWh = value(sum(model_.NSE[h] for h in model_.H))
+
+        # Create the DataFrame for NSE
+        new_nse_row = pd.DataFrame({
+            'Resource': "NSE",
+            'MW': NSE_MW,
+            'Percent_MW': NSE_MW / (np.max(demand[demand_column])) * 100,
+            'GWh': NSE_MWh / 1000,
+            'Percent_GWh': 100 * NSE_MWh / sum(demand[demand_column])
+        }, index=[0])
+
+        results.append(new_nse_row)
+
+        # Concatenate all DataFrames in the results list
+        results_df = pd.concat(results, ignore_index=True)
+
+        st.write(results_df)
