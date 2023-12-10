@@ -76,20 +76,24 @@ consider_renewables = st.checkbox(
 
 if consider_renewables:
     # Default value is set to 50
-    max_capacity_solar = st.slider(
-        "Maximum Capacity of Solar Compared to the Total Yearlong Load ",
-        min_value=0,
-        max_value=100,
-        value=20,
-        key="capacity_solar",
-    )
     max_capacity_wind = st.slider(
-        "Maximum Capacity of Wind Compared to the Total Yearlong Load",
+        "Maximum Capacity of Wind Compared to the Yearlong Peak Load",
         min_value=0,
         max_value=100,
         value=30,
         key="capacity_wind",
     )
+
+    max_capacity_solar = st.slider(
+        "Maximum Capacity of Solar Compared to the Yearlong Peak Load ",
+        min_value=0,
+        max_value=100,
+        value=20,
+        key="capacity_solar",
+    )
+
+st.write("Maximum Capacity of Wind Compared to the Yearlong Peak Load ", max_capacity_wind, "%")
+st.write("Maximum Capacity of Solar Compared to the Yearlong Peak Load ", max_capacity_solar, "%")
 
 if st.button("Run the Model"):
     time_series_plot(demand, "Demand")
