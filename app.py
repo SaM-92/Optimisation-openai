@@ -1,12 +1,6 @@
 import streamlit as st  # web development
 import datetime
-
-# from subs.data_loader import load_data, process_data_for_analysis , process_uploaded_file, convert_time , process_time_resolution_and_duplicates , display_column_statistics
-# from subs.visualisation import visualize_missing_values , visualize_data_by_date_range , visualise_time_series_data
 import black
-
-# You need to instal both Pyomo and glpk package before running the code
-
 from pyomo.environ import *
 import numpy as np
 import math
