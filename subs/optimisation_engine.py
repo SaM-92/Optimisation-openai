@@ -25,7 +25,7 @@ def opt_engine(
     # The set of generators from the generators DataFrame
 
     model.G = Set(
-        initialize=[i for i in generators[generators_names][:-2]],
+        initialize=[i for i in generators[generators_names]],
         doc="set of generators",
     )
 
@@ -52,11 +52,15 @@ def opt_engine(
 
     model.cDemandBalance = Constraint(model.H, rule=cDemandBalance_)
 
-    # cCapacity (eq. 12)
-    def cCapacity_(model, g, h):
-        return model.GEN[g, h] <= model.CAP[g]
-
-    model.cCapacity = Constraint(model.G, model.H, rule=cCapacity_)
+    #cCapacity (eq. 12)
+    def cCapacity_(model,g,h):
+        if g != RES_wind or RES_solar:
+            return(model.GEN[g,h] <= model.CAP[g] )
+        elif g==RES_wind:
+            return(model.GEN[g,h] <= model.CAP[g] *RES[RES_wind])
+        elif g==RES_solar:
+            return(model.GEN[g,h] <= model.CAP[g] *RES[RES_solar])
+    model.cCapacity=Constraint(model.G,model.H,rule=cCapacity_)
 
     # ---------------Objective Function-------------------
     # Create dictionaries for fixed and variable costs
