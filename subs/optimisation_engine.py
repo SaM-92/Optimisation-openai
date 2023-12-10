@@ -1,6 +1,7 @@
 from pyomo.environ import *
 import streamlit as st  # web development
-
+import pandas as pd  
+import numpy as np 
 
 def opt_engine(
     generators,
@@ -93,9 +94,58 @@ def solver_opt(model_):
         ):
             # print('feasible')
             st.text("✔️ Feasible")
+            state_solution = True
+            
         elif results.solver.termination_condition == TerminationCondition.infeasible:
             # print('infeasible')
             st.text("❌ infeasible")
+            state_solution = False
         else:
             # print ('Solver Status:',  results.solver.status)
             st.text(f"Solver Status: {results.solver.status}")
+    return state_solution 
+
+def interpret_outputs(model_,generators,generators_names,demand,demand_column,state_solution):
+    if state_solution == True:
+                # Create a dictionary for generator indices
+                generator_indices = {name: i for i, name in enumerate(generators[generators_names])}
+
+                # Initialize an empty DataFrame
+                results_df  = pd.DataFrame(columns=['Resource', 'MW', 'Percent_MW', 'GWh', 'Percent_GWh'])
+
+                # Record generation capacity and energy results
+                for i in model_.G:
+                    generation = value(sum(model_.GEN[i,h] for h in model_.H))
+                    MWh_share = generation/sum(demand[demand_column])*100
+                    cap_share = value(model_.CAP[i])/np.max(demand[demand_column])*100
+                    new_row  = pd.DataFrame({
+                        'Resource': generators[generators_names][generator_indices[i]], 
+                        'MW': value(model_.CAP[i]),
+                        'Percent_MW': cap_share,
+                        'GWh': generation/1000,
+                        'Percent_GWh': MWh_share
+                    },index=[0])
+
+                results_df = pd.concat([results_df, new_row], ignore_index=True)
+
+                    
+                # Calculate how much non-served energy there was and add to results
+                NSE_MW = 0 
+                for h in model_.H:
+                    initial= value(model_.NSE[h]) 
+                    if initial > NSE_MW:
+                        NSE_MW=initial   
+                NSE_MWh = value(sum(model_.NSE[h] for h in model_.H))
+
+                new_row  = pd.DataFrame({
+                        'Resource': "NSE", 
+                        'MW': NSE_MW,
+                        'Percent_MW': NSE_MW/(np.max(demand[demand_column]))*100,
+                        'GWh': NSE_MWh/1000,
+                        'Percent_GWh':100* NSE_MWh/sum(demand[demand_column])
+                    },index=[0]) 
+                
+                results_df = pd.concat([results_df, new_row], ignore_index=True) 
+
+                st.write(results_df)
+

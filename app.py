@@ -7,7 +7,7 @@ import math
 import pandas as pd
 from pandas import Series, DataFrame
 from subs.data_processing import time_series_plot, plot_cumulative_distribution
-from subs.optimisation_engine import opt_engine, solver_opt
+from subs.optimisation_engine import opt_engine, solver_opt, interpret_outputs
 from subs.initialisation import (
     GenCo_reading,
     demand_reading,
@@ -16,9 +16,10 @@ from subs.initialisation import (
 )
 
 st.set_page_config(
-    page_title="Capacity Expansion Model",
-    page_icon="🏭",
+    page_title="Capacity Expansion Model", page_icon="🏭", layout="centered"
 )
+
+
 st.image("./images/header.png")
 
 st.title("A Basic Power System Capacity Expansion Model")
@@ -107,6 +108,9 @@ if st.button("Run the Model"):
         max_capacity_wind,
         max_capacity_solar,
     )
-    solver_opt(opt_model)
+    state_solution = solver_opt(opt_model)
+    interpret_outputs(
+        opt_model, generators, generators_names, demand, demand_column, state_solution
+    )
 
 st.markdown("### 🤖 OpenAI ")
