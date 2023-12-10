@@ -11,10 +11,10 @@ def opt_engine(generators,FixedCost,VarCost,generators_names,demand,demand_colum
 
     # The set of generators from the generators DataFrame
 
-    model.G  = Set(initialize=[i for i in generators.G[:-2]], doc='set of generators') 
+    model.G  = Set(initialize=[i for i in generators[generators_names][:-2]], doc='set of generators') 
 
     # The set of hours in the demand DataFrame
-    model.H = Set(initialize=RangeSet(0,len(demand.Hour)-1), doc='set of time')  
+    model.H = Set(initialize=RangeSet(0,len(demand.reset_index().index)-1), doc='set of time')  
 
     # Generating capacity built (MW)
     model.CAP=Var(model.G,domain=NonNegativeReals)
@@ -27,7 +27,7 @@ def opt_engine(generators,FixedCost,VarCost,generators_names,demand,demand_colum
 
     #cDemandBalance (eq. 11)
     def cDemandBalance_(model,h):
-        return(sum(model.GEN[i,h] for i in model.G) + model.NSE[h] == demand.demand_column[h])
+        return(sum(model.GEN[i,h] for i in model.G) + model.NSE[h] == demand[demand_column][h])
     model.cDemandBalance=Constraint(model.H,rule=cDemandBalance_)
 
 

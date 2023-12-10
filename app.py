@@ -52,8 +52,8 @@ st.markdown("### 🍃🌍☀️ Renewables Capacity Factors")
 
 input_RES = st.radio('Do you want to use the default values for year long renewables data or upload your own data?', ('Use Default Values', 'Upload My Own Data'))
 
-RES, RES_wind, RES_solar = RES_reading(input_RES)
-
+RES, RES_wind , RES_solar = RES_reading(input_RES)
+st.write("Penalty for non-served energy ", RES_wind, '$/MWh')
 st.markdown("### 💡 Penalty for non-served energy ($/MWh)")
 
 NSECost = not_supplied_energy()
@@ -62,10 +62,14 @@ NSECost = not_supplied_energy()
 
 
 st.markdown("### ⚙️ Optimisation Engine")
+consider_renewables = st.checkbox('Tick the box if you want to consider renewables', value=True, key='renewables')
+if consider_renewables:
+    # Default value is set to 50
+    max_capacity_solar = st.slider('Maximum Capacity of Solar Compared to the Total Yearlong Load ', min_value=0, max_value=100, value=20, key='capacity_solar')
+    max_capacity_wind = st.slider('Maximum Capacity of Wind Compared to the Total Yearlong Load' , min_value=0, max_value=100, value=30, key='capacity_wind')
 if st.button('Run the Model'):
     time_series_plot(demand,'Demand')
     plot_cumulative_distribution(demand)
-    
     opt_model = opt_engine(generators,FixedCost,VarCost,generators_names,demand,demand_column,RES, RES_wind, RES_solar,NSECost) 
     solver_opt(opt_model)
 
