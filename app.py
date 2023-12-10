@@ -101,8 +101,6 @@ if 'output_results' not in st.session_state:
     st.session_state.output_results = None 
 
 if st.button("Run the Model"):
-    time_series_plot(demand, "Demand")
-    plot_cumulative_distribution(demand)
     opt_model = opt_engine(
         generators,
         FixedCost,
@@ -122,6 +120,9 @@ if st.button("Run the Model"):
     st.session_state.output_results = interpret_outputs(
         opt_model, generators, generators_names, demand, demand_column, state_solution
     )
+
+    time_series_plot(demand, "Demand")
+    plot_cumulative_distribution(demand)
 
 st.markdown("### 🤖 OpenAI ")
 if st.session_state.output_results is not None:

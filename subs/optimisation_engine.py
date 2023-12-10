@@ -95,7 +95,7 @@ def opt_engine(
 
 
 def solver_opt(model_):
-    with st.spinner("Solving the model..."):
+    with st.spinner("⏲️ Solving the model...🤓"):
         solver = SolverFactory("glpk")
         # solver.options['thread']=4
 
