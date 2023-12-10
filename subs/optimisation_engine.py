@@ -169,7 +169,7 @@ def interpret_outputs(
 
         new_row = pd.DataFrame(
             {
-                "Generator_Type": "NSE",
+                "Generator_Type": "Not Supplied Energy",
                 "Generator_Capacity_MW": NSE_MW,
                 "Capacity_as_Percent_of_Max_Demand": NSE_MW
                 / (np.max(demand[demand_column]))
@@ -185,3 +185,4 @@ def interpret_outputs(
         results_df = pd.concat([results_df, new_row], ignore_index=True)
 
         st.write(results_df)
+        return(results_df)

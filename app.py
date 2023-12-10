@@ -14,6 +14,7 @@ from subs.initialisation import (
     RES_reading,
     not_supplied_energy,
 )
+from subs.openai_api import opt_gpt_summarise
 
 st.set_page_config(
     page_title="Capacity Expansion Model", page_icon="🏭", layout="centered"
@@ -80,7 +81,7 @@ if consider_renewables:
         "Maximum Capacity of Wind Compared to the Yearlong Peak Load",
         min_value=0,
         max_value=100,
-        value=30,
+        value=0,
         key="capacity_wind",
     )
 
@@ -88,12 +89,16 @@ if consider_renewables:
         "Maximum Capacity of Solar Compared to the Yearlong Peak Load ",
         min_value=0,
         max_value=100,
-        value=20,
+        value=0,
         key="capacity_solar",
     )
 
 st.write("Maximum Capacity of Wind Compared to the Yearlong Peak Load ", max_capacity_wind, "%")
 st.write("Maximum Capacity of Solar Compared to the Yearlong Peak Load ", max_capacity_solar, "%")
+
+
+if 'output_results' not in st.session_state:
+    st.session_state.output_results = None 
 
 if st.button("Run the Model"):
     time_series_plot(demand, "Demand")
@@ -113,8 +118,11 @@ if st.button("Run the Model"):
         max_capacity_solar,
     )
     state_solution = solver_opt(opt_model)
-    interpret_outputs(
+    
+    st.session_state.output_results = interpret_outputs(
         opt_model, generators, generators_names, demand, demand_column, state_solution
     )
 
 st.markdown("### 🤖 OpenAI ")
+if st.session_state.output_results is not None:
+    st.write(opt_gpt_summarise(generators,st.session_state.output_results))
