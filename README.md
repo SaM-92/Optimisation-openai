@@ -8,7 +8,11 @@ This Streamlit application showcases a basic electricity generation capacity exp
 ## Features
 
 -**Data Import:** Users have the flexibility to import their own data in CSV format or utilise default values provided within the model.
+
+
 -**Solver:** The model employs Pyomo and utilises the GLPK solver to efficiently solve the optimisation problem.
+
+
 -**Decision Insights:** After the optimisation process, the outputs are passed through the OpenAI API. This API interprets the results and presents users with a brief paragraph summarizing the decisions made by the model.
 
 ## Libraries Used
