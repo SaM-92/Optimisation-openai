@@ -1,9 +1,6 @@
 import streamlit as st  # web development
-import datetime
-import black
 from pyomo.environ import *
 import numpy as np
-import math
 import pandas as pd
 from pandas import Series, DataFrame
 from subs.data_processing import time_series_plot, plot_cumulative_distribution
@@ -24,13 +21,15 @@ st.set_page_config(
 st.image("./images/header.png")
 
 st.title("A Basic Power System Capacity Expansion Model")
-st.markdown("Created by Saeed Misaghian")
-st.markdown("📧 Contact me: [sam.misaqian@gmail.com](mailto:sam.misaqian@gmail.com)")
-st.markdown("🔗 [GitHub](https://github.com/SaM-92)")
-st.markdown("🔗 [LinkedIn](https://www.linkedin.com/in/saeed-misaghian/)")
 
-st.markdown(
-    "📕 This model and associated data are taken from [this repos](https://github.com/Power-Systems-Optimization-Course/power-systems-optimization/blob/master/Notebooks/03-Basic-Capacity-Expansion.ipynb)"
+
+st.sidebar.markdown("Created by Saeed Misaghian")
+st.sidebar.markdown("📧 [sam.misaqian@gmail.com](mailto:sam.misaqian@gmail.com)")
+st.sidebar.markdown("🔗 [GitHub](https://github.com/SaM-92)")
+st.sidebar.markdown("🔗 [LinkedIn](https://www.linkedin.com/in/saeed-misaghian/)")
+
+st.sidebar.markdown(
+    "📕 This model and associated data are taken from [here](https://github.com/Power-Systems-Optimization-Course/power-systems-optimization/blob/master/Notebooks/03-Basic-Capacity-Expansion.ipynb)"
 )
 
 st.markdown("### 🏭 Generators Input Data")
