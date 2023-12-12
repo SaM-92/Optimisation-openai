@@ -5,7 +5,7 @@ import os
 def opt_gpt_summarise(input_data, opt_output):
     with st.spinner("Creating the text!..."):
         # Ensure your API key is correctly set in your environment variables
-        openai.api_key = os.getenv('OPENAI_TOKEN') 
+        openai.api_key = os.getenv('OPENAI_TOKEN') or st.secrets["OPENAI_TOKEN"]
 
         # Construct the messages
         messages = [
