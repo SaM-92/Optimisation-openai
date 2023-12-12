@@ -120,6 +120,19 @@ if st.button("Run the Model"):
     time_series_plot(demand, "Demand")
     plot_cumulative_distribution(demand)
 
+if "n_requests" not in st.session_state:
+    st.session_state.n_requests = 0
+if "text_error" not in st.session_state:
+    st.session_state.text_error = ""
+
 st.markdown("### 🤖 OpenAI ")
 if st.session_state.output_results is not None:
-    st.write(opt_gpt_summarise(generators,st.session_state.output_results))
+    # Check the number of requests
+    if st.session_state.n_requests >= 3:
+        st.session_state.text_error = "Too many requests. Please try later."
+        st.session_state.n_requests = 1
+        st.write(st.session_state.text_error)
+    else:
+        st.write(opt_gpt_summarise(generators,st.session_state.output_results))
+        # Increment the number of requests
+        st.session_state.n_requests += 1
