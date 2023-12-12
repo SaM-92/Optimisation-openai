@@ -4,6 +4,9 @@ This Streamlit application showcases a basic electricity generation capacity exp
 
 ![overview](images/overview.png)
 
+## Demo
+
+![Demo GIF](./demo/demo.gif)
 
 ## Features
 
@@ -11,9 +14,7 @@ This Streamlit application showcases a basic electricity generation capacity exp
 
 -**Optimisation Engine::** The model employs Pyomo and utilises the GLPK solver to efficiently solve the optimisation problem. It accounts for conventional and renewable power generators, integrating renewables capacity factors derived from time-series data.
 
-
 -**Decision Insights:** After the optimisation process, the outputs are passed through the OpenAI API. This API interprets the results and presents users with a brief paragraph summarizing the decisions made by the model.
-
 
 The model takes into account the renewable power sources by factoring in their capacities based on provided time series data. By utilising Pyomo and the GLPK solver, it optimises decisions that lead to cost-efficiency, ultimately minimising the overall expenses within the system. The OpenAI API aids in interpreting these outcomes, presenting users with insightful summaries of the decisions made by the model, rooted in cost-effective considerations
 
