@@ -1,11 +1,11 @@
 import openai
 import streamlit as st  # web development
-
+import os 
 
 def opt_gpt_summarise(input_data, opt_output):
     with st.spinner("Creating the text!..."):
         # Ensure your API key is correctly set in your environment variables
-        openai.api_key = "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"
+        openai.api_key = os.getenv('OPENAI_TOKEN') 
 
         # Construct the messages
         messages = [
