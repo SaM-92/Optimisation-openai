@@ -2,36 +2,30 @@
 
 This Streamlit application showcases a basic electricity generation capacity expansion model. The primary objective of this model is to minimise fixed and variable costs among a range of generators to match projected future electricity demands. Beyond presenting numerical results, our optimisation engine employs OpenAI's API to interpret outcomes in concise, user-friendly paragraphs. The diagram below illustrates the foundational structure of this model.
 
-
 ![overview](images/overview.png)
 
 
-## Model Description
+## Features
 
-The model first presents a basic optimization formulation of this optimal thermal generator capacity expansion problem, and the impact of variable renewable energy sources (wind, solar). It then presents a slightly modified formulation that co-optimizes thermal and renewable capacities.
-
-The data for this model was originally developed by Jesse D. Jenkins and Michael R. Davidson (last updated: October 3, 2022), where they coded the model optimization in Julia. This app transfers it to Python and adds some features to the model.
-
-Users can import data as a CSV file, or they can use the default values provided in the model. The model uses Pyomo, with the GLPK solver to solve the optimization problem. In the end, the outputs are sent to the OpenAI API, which interprets them and provides the user with a short paragraph about the decision made by the model.
+-**Data Import:** Users have the flexibility to import their own data in CSV format or utilise default values provided within the model.
+-**Solver:** The model employs Pyomo and utilises the GLPK solver to efficiently solve the optimisation problem.
+-**Decision Insights:** After the optimisation process, the outputs are passed through the OpenAI API. This API interprets the results and presents users with a brief paragraph summarizing the decisions made by the model.
 
 ## Libraries Used
 
-The app uses the following libraries:
+- Streamlit: For web development and user interface
+- Pyomo: For optimisation modeling
+- Plotly: For graphical representations
+- Pandas and NumPy: For data manipulation and computation
 
-- Streamlit for web development
-- Pyomo for optimization
-- Plotly for data visualization
-- Pandas for data manipulation
-- Numpy for numerical computation
+## Usage
 
-## Contact
+To run the app:
 
-Created by Saeed Misaghian
+1. Ensure Python and the required libraries are installed.
+2. Clone the repository.
+3. Install necessary dependencies (`pip install -r requirements.txt`).
+4. Run the Streamlit app (`streamlit run app.py`).
+5. Explore the model using either default values or by importing your own data.
 
-- 📧 Email
-- 🔗 GitHub
-- 🔗 LinkedIn
-
-## References
-
-- Original Model Repository
+Feel free to contribute, raise issues, or suggest enhancements to this project.
