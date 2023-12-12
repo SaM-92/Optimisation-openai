@@ -3,8 +3,7 @@
 This Streamlit application showcases a basic electricity generation capacity expansion model. The primary objective of this model is to minimise fixed and variable costs among a range of generators to match projected future electricity demands. Beyond presenting numerical results, our optimisation engine employs OpenAI's API to interpret outcomes in concise, user-friendly paragraphs. The diagram below illustrates the foundational structure of this model.
 
 
-![overview](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/saeed.misaghian/Documents/Repos_Personal/Energy_market/images/overview.png)
-
+![overview](images/overview.png)
 
 
 ## Model Description
