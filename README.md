@@ -5,6 +5,9 @@ This Streamlit application showcases a basic electricity generation capacity exp
 ![overview](images/overview.png)
 
 ## Demo
+App is deployed on streamlit at the link below: 
+
+https://cem-openai.streamlit.app/
 
 ![Demo GIF](./demo/demo.gif)
 
